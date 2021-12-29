@@ -1,8 +1,10 @@
 package com.example.newsapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.View
 import android.widget.ProgressBar
@@ -14,6 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.models.Article
 import com.example.newsapp.viewmodel.NewsViewModel
+import android.view.WindowManager
+import android.app.ActivityManager
+import android.app.ActivityManager.RunningTaskInfo
+
 
 class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
@@ -30,9 +36,15 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             NewsViewModel::class.java)
     }
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val intent: Intent = Intent(this, LoginActivity::class.java)
+//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
 
         pbLoading = findViewById(R.id.pb_loading)
         rvNews = findViewById(R.id.recyclerView)
@@ -110,7 +122,20 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             searchView.setQuery("", false)
             isSearch = false
         }else{
+            finishAffinity()
             super.onBackPressed()
+        }
+    }
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        val mngr = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+
+        val taskList = mngr.getRunningTasks(10)
+
+        if (taskList[0].numActivities == 1 && taskList[0].topActivity!!.className == this.javaClass.name) {
+            val intent: Intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 }

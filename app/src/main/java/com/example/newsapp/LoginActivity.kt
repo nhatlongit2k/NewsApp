@@ -171,9 +171,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private fun checkMatchPassCode() {
         if (getPassCodeFromSharedPreferences().equals(passCode)){
             Toast.makeText(this, "Mở khóa thành công", Toast.LENGTH_SHORT).show()
-            val intent: Intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+//            val intent: Intent = Intent(this, MainActivity::class.java)
+//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//            startActivity(intent)
+            finish()
         }else{
             Toast.makeText(this, "Sai mật khẩu", Toast.LENGTH_SHORT).show()
             numbers_list.clear()
@@ -196,5 +197,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         var sharedPreferences: SharedPreferences = getSharedPreferences("pass_code_pref", Context.MODE_PRIVATE)
         var passCode: String = sharedPreferences.getString("pass_code", "").toString()
         return passCode
+    }
+
+    override fun onBackPressed() {
+
     }
 }

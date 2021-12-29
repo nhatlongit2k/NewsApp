@@ -1,5 +1,7 @@
 package com.example.newsapp
 
+import android.app.ActivityManager
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -29,5 +31,21 @@ class NewsActivity : AppCompatActivity() {
         }
 
         webView.webViewClient = WebViewClient()
+    }
+
+    override fun onUserLeaveHint() {
+
+        Log.d("TAG", "onUserLeaveHint: ")
+        val intent: Intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        super.onUserLeaveHint()
+//        val mngr = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+//
+//        val taskList = mngr.getRunningTasks(10)
+//
+//        if (taskList[0].numActivities == 1 && taskList[0].topActivity!!.className == this.javaClass.name) {
+//            val intent: Intent = Intent(this, LoginActivity::class.java)
+//            startActivity(intent)
+//        }
     }
 }
