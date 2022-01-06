@@ -26,6 +26,7 @@ class NewsActivity : AppCompatActivity() {
 
         webView = findViewById(R.id.web_view)
         val url: String? = intent.getStringExtra("linkUrl")
+        Log.d("TAG", "url: $url ")
         if (url != null) {
             webView.loadUrl(url)
         }
@@ -33,12 +34,29 @@ class NewsActivity : AppCompatActivity() {
         webView.webViewClient = WebViewClient()
     }
 
+    override fun onResume() {
+        if (MainActivity.locking == true){
+            val intent: Intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            MainActivity.locking = false
+        }
+        super.onResume()
+    }
+
     override fun onUserLeaveHint() {
 
-        Log.d("TAG", "onUserLeaveHint: ")
-        val intent: Intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        super.onUserLeaveHint()
+        val mngr = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+
+
+        val taskList: List<ActivityManager.RunningTaskInfo> = mngr.getRunningTasks(10)
+//        Log.d("TAG", "${taskList[0].numActivities}: ")
+        Log.d("TAG", "${taskList[0].topActivity!!.className}: == ${this.javaClass.name} ")
+        if (taskList[0].numActivities == 1) {
+//            Log.d("TAG", "onUserLeaveHint: ")
+//            val intent: Intent = Intent(this, LoginActivity::class.java)
+//            startActivity(intent)
+            MainActivity.locking = true
+        }
 //        val mngr = getSystemService(ACTIVITY_SERVICE) as ActivityManager
 //
 //        val taskList = mngr.getRunningTasks(10)
@@ -47,5 +65,6 @@ class NewsActivity : AppCompatActivity() {
 //            val intent: Intent = Intent(this, LoginActivity::class.java)
 //            startActivity(intent)
 //        }
+        super.onUserLeaveHint()
     }
 }

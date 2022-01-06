@@ -37,4 +37,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
 
+    <Button
+        android:id="@+id/bt_try_again"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thử lại"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="50dp"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

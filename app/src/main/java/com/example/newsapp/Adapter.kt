@@ -95,6 +95,7 @@ class Adapter(var articles: ArrayList<Article>, var context: Context): RecyclerV
                 val intent: Intent = Intent(context, NewsActivity::class.java)
                 intent.putExtra("linkUrl", articles[layoutPosition].url)
                 context.startActivity(intent)
+                MainActivity.locking = false
             }
         }
     }

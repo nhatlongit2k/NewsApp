@@ -19,6 +19,7 @@ import com.example.newsapp.viewmodel.NewsViewModel
 import android.view.WindowManager
 import android.app.ActivityManager
 import android.app.ActivityManager.RunningTaskInfo
+import android.widget.Button
 
 
 class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
@@ -28,8 +29,14 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     lateinit var pbLoading: ProgressBar
 
     lateinit var searchView: SearchView
+
+    lateinit var btRetry: Button
     var articleList: ArrayList<Article> = ArrayList()
     var isSearch = false
+
+    companion object{
+        var locking = true
+    }
 
     private val newsViewModel: NewsViewModel by lazy {
         ViewModelProvider(this, NewsViewModel.NewsViewModelFactory(this.application)).get(
@@ -42,16 +49,22 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val intent: Intent = Intent(this, LoginActivity::class.java)
-//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+//        val intent: Intent = Intent(this, LoginActivity::class.java)
+////        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//        startActivity(intent)
 
+        btRetry = findViewById(R.id.bt_try_again)
         pbLoading = findViewById(R.id.pb_loading)
         rvNews = findViewById(R.id.recyclerView)
         rvNews.setHasFixedSize(true)
         rvNews.layoutManager = LinearLayoutManager(this)
         rvNews.adapter = Adapter(articleList, this)
         loadDing()
+
+        btRetry.setOnClickListener {
+            loadDing()
+            btRetry.visibility = View.GONE
+        }
     }
 
     private fun loadDing() {
@@ -67,6 +80,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                         }
                     }
                     Status.ERROR->{
+                        btRetry.visibility = View.VISIBLE
                         pbLoading.visibility = View.GONE
                         Log.d("TAG", "onCreate: ${it.message}")
                         Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
@@ -122,20 +136,40 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             searchView.setQuery("", false)
             isSearch = false
         }else{
+            locking=true
             finishAffinity()
             super.onBackPressed()
         }
     }
 
-    override fun onUserLeaveHint() {
-        super.onUserLeaveHint()
-        val mngr = getSystemService(ACTIVITY_SERVICE) as ActivityManager
-
-        val taskList = mngr.getRunningTasks(10)
-
-        if (taskList[0].numActivities == 1 && taskList[0].topActivity!!.className == this.javaClass.name) {
+    override fun onResume() {
+        if (locking == true){
             val intent: Intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+            locking = false
         }
+        super.onResume()
+    }
+
+    override fun onUserLeaveHint() {
+//        if(isTaskRoot){
+//            Log.d("TAG", "onUserLeaveHint: ")
+//            val intent: Intent = Intent(this, LoginActivity::class.java)
+//            startActivity(intent)
+//        }
+
+        val mngr = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+
+
+        val taskList: List<ActivityManager.RunningTaskInfo> = mngr.getRunningTasks(10)
+//        Log.d("TAG", "${taskList[0].numActivities}: ")
+//        Log.d("TAG", "${taskList[0].topActivity!!.className}: == ${this.javaClass.name} ")
+        if (taskList[0].numActivities == 1) {
+            Log.d("TAG", "onUserLeaveHint: ")
+//            val intent: Intent = Intent(this, LoginActivity::class.java)
+//            startActivity(intent)
+            locking = true
+        }
+        super.onUserLeaveHint()
     }
 }
