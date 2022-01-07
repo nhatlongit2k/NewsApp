@@ -3,7 +3,6 @@ package com.example.newsapp
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,11 +17,11 @@ import com.example.newsapp.models.Article
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.target.Target
 import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 
-class Adapter(var articles: ArrayList<Article>, var context: Context): RecyclerView.Adapter<Adapter.MyViewHolder>() {
+class Adapter(var articles: ArrayList<Article>, var context: Context) :
+    RecyclerView.Adapter<Adapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item, parent, false)
@@ -35,10 +34,7 @@ class Adapter(var articles: ArrayList<Article>, var context: Context): RecyclerV
         holder.tvDesc.setText(currentItem.description)
         holder.tvAuthor.setText(currentItem.author)
         holder.tvPublishedAt.setText(convertDate(currentItem.publishedAt))
-        //holder.tvSource.setText(currentItem.source.name)
-        //holder.tvTime.setText(currentItem.)
-        if(context!=null){
-//            Glide.with(context).load(currentItem.urlToImage).into(holder.imgView)
+        if (context != null) {
             Glide.with(context)
                 .load(currentItem.urlToImage)
                 .listener(object : RequestListener<Drawable?> {
@@ -73,15 +69,15 @@ class Adapter(var articles: ArrayList<Article>, var context: Context): RecyclerV
         return articles.size
     }
 
-    fun convertDate(date: String): String{
-        val sdf: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-        val output: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm aa")
+    fun convertDate(date: String): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        val output = SimpleDateFormat("yyyy-MM-dd HH:mm aa")
         val d = sdf.parse(date)
         val formattedTime = output.format(d)
         return formattedTime
     }
 
-    inner class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvTitle: TextView = itemView.findViewById(R.id.tv_title)
         val tvDesc: TextView = itemView.findViewById(R.id.tv_desc)
         val tvAuthor: TextView = itemView.findViewById(R.id.tv_author)
@@ -91,11 +87,9 @@ class Adapter(var articles: ArrayList<Article>, var context: Context): RecyclerV
 
         init {
             itemView.setOnClickListener {
-//                articles[layoutPosition]
-                val intent: Intent = Intent(context, NewsActivity::class.java)
+                val intent = Intent(context, NewsActivity::class.java)
                 intent.putExtra("linkUrl", articles[layoutPosition].url)
                 context.startActivity(intent)
-                MainActivity.locking = false
             }
         }
     }

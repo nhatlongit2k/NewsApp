@@ -23,7 +23,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="10dp"/>
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/rv_new"
                 android:scrollbars="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
