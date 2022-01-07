@@ -9,7 +9,7 @@ import com.example.newsapp.respository.PreferenceRespository
 import com.example.newsapp.respository.QuoteRespository
 import java.lang.IllegalArgumentException
 
-class PreferenceViewModel(val application: Application) : ViewModel() {
+class PreferenceViewModel(val application: Application) {
 
     private val preferenceRespository: PreferenceRespository = PreferenceRespository(application)
 
@@ -19,15 +19,4 @@ class PreferenceViewModel(val application: Application) : ViewModel() {
         preferenceRespository.getPassCodeFromSharedPreferences()
 
     fun savePasscode(password: String) = preferenceRespository.savePasscode(password)
-
-    class PreferenceViewModelFactory(private val application: Application) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(PreferenceViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return PreferenceViewModel(application) as T
-            }
-            throw IllegalArgumentException("Unable construce viewmodel")
-        }
-    }
 }

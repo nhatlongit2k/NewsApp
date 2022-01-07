@@ -22,12 +22,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var num_04: String
 
     private val preferenceViewModel: PreferenceViewModel by lazy {
-        ViewModelProvider(
-            this,
-            PreferenceViewModel.PreferenceViewModelFactory(this.application)
-        ).get(
-            PreferenceViewModel::class.java
-        )
+        PreferenceViewModel(application)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
