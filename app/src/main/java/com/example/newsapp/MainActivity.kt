@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapp.models.Article
 import com.example.newsapp.viewmodel.NewsViewModel
-import androidx.lifecycle.ProcessLifecycleOwner
 import com.example.newsapp.databinding.ActivityMainBinding
 
 
@@ -18,7 +17,6 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     lateinit var searchView: SearchView
     lateinit var binding: ActivityMainBinding
-    lateinit var appLifecycleObserver: AppLifecycleObserver
     var articleList: ArrayList<Article> = ArrayList()
     var isSearch = false
 
@@ -32,8 +30,6 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        appLifecycleObserver = AppLifecycleObserver(this)
-        ProcessLifecycleOwner.get().lifecycle.addObserver(appLifecycleObserver)
         binding.rvNew.setHasFixedSize(true)
         binding.rvNew.layoutManager = LinearLayoutManager(this)
         binding.rvNew.adapter = Adapter(articleList, this)
@@ -115,7 +111,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             searchView.setQuery("", false)
             isSearch = false
         } else {
-            ProcessLifecycleOwner.get().lifecycle.removeObserver(appLifecycleObserver)
+//            ProcessLifecycleOwner.get().lifecycle.removeObserver(appLifecycleObserver)
             finishAffinity()
             super.onBackPressed()
         }
